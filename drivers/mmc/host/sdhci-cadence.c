@@ -351,8 +351,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
 
-	is this even compiling
-
 	printk(KERN_ERR "sdhci_cdns_probe\n");
 
 	clk = devm_clk_get(dev, NULL);
