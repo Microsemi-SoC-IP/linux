@@ -103,11 +103,9 @@ static int sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
 	tmp = FIELD_PREP(SDHCI_CDNS_HRS04_WDATA, data) |
 	      FIELD_PREP(SDHCI_CDNS_HRS04_ADDR, addr);
 	writel(tmp, reg);
-	printk(KERN_ERR "sdhci_cdns_write_phy_reg  writel tmp(%d) reg(%x)", tmp, *reg); 
 
 	tmp |= SDHCI_CDNS_HRS04_WR;
 	writel(tmp, reg);
-	printk(KERN_ERR "sdhci_cdns_write_phy_reg  writel tmp(%d) reg(%x)", tmp, *reg); 
 
 	ret = readl_poll_timeout(reg, tmp, tmp & SDHCI_CDNS_HRS04_ACK, 0, 10);
 	if (ret) {
