@@ -15,6 +15,8 @@
 
 #include "sdhci-pltfm.h"
 
+build me or not
+
 #define DEBUG
 
 /* HRS - Host Register Set (specific to Cadence) */
