@@ -98,21 +98,26 @@ static int sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
 	void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS04;
 	u32 tmp;
 	int ret;
+	printk(KERN_ERR "sdhci_cdns_write_phy_reg addr(%d) data(%d)", addr, data); 
 
 	tmp = FIELD_PREP(SDHCI_CDNS_HRS04_WDATA, data) |
 	      FIELD_PREP(SDHCI_CDNS_HRS04_ADDR, addr);
 	writel(tmp, reg);
+	printk(KERN_ERR "sdhci_cdns_write_phy_reg  writel tmp(%d) reg(%x)", tmp, *reg); 
 
 	tmp |= SDHCI_CDNS_HRS04_WR;
 	writel(tmp, reg);
+	printk(KERN_ERR "sdhci_cdns_write_phy_reg  writel tmp(%d) reg(%x)", tmp, *reg); 
 
 	ret = readl_poll_timeout(reg, tmp, tmp & SDHCI_CDNS_HRS04_ACK, 0, 10);
-	if (ret)
+	if (ret) {
+		printk(KERN_ERR "sdhci_cdns_write_phy_reg readl_poll_timeout FAILED"); 
 		return ret;
+	}
 
 	tmp &= ~SDHCI_CDNS_HRS04_WR;
 	writel(tmp, reg);
-
+	printk(KERN_ERR "sdhci_cdns_write_phy_reg PASSED"); 
 	return 0;
 }
 
@@ -157,7 +162,6 @@ static int sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
 		if (ret)
 			return ret;
 	}
-
 	return 0;
 }
 
