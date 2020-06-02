@@ -150,7 +150,7 @@ static void sdhci_cdns_phy_param_parse(struct device_node *np,
 static int sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
 {
 	int ret, i;
-
+	printk(KERN_ERR "sdhci_cdns_phy_init %d\n", priv->nr_phy_params);
 	for (i = 0; i < priv->nr_phy_params; i++) {
 		ret = sdhci_cdns_write_phy_reg(priv, priv->phy_params[i].addr,
 					       priv->phy_params[i].data);
@@ -351,25 +351,33 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
 
+	printk(KERN_ERR "sdhci_cdns_probe\n");
+
 	clk = devm_clk_get(dev, NULL);
 	if (IS_ERR(clk))
 		return PTR_ERR(clk);
+
+	printk(KERN_ERR "devm_clk_get - OK\n");
 
 	ret = clk_prepare_enable(clk);
 	if (ret)
 		return ret;
 
+	printk(KERN_ERR "clk_prepare_enable - OK\n");
 	data = of_device_get_match_data(dev);
 	if (!data)
 		data = &sdhci_cdns_pltfm_data;
 
 	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
+	printk(KERN_ERR "sdhci_cdns_phy_param_count - %d\n", nr_phy_params);
 	host = sdhci_pltfm_init(pdev, data,
 				struct_size(priv, phy_params, nr_phy_params));
 	if (IS_ERR(host)) {
 		ret = PTR_ERR(host);
 		goto disable_clk;
 	}
+
+	printk(KERN_ERR "sdhci_pltfm_init\n");
 
 	pltfm_host = sdhci_priv(host);
 	pltfm_host->clk = clk;
@@ -385,10 +393,14 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 
 	// Enable 3.3V
 	host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+	printk(KERN_ERR "SDHCI_QUIRK2_NO_1_8_V \n");
+
 	sdhci_enable_v4_mode(host);
 	__sdhci_read_caps(host, &version, NULL, NULL);
 
 	sdhci_get_of_property(pdev);
+
+	printk(KERN_ERR "SDHCI_QUIRK2_NO_1_8_V \n");
 
 	ret = mmc_of_parse(host->mmc);
 	if (ret)
@@ -399,16 +411,18 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	ret = sdhci_cdns_phy_init(priv);
 	if (ret)
 		goto free;
-
+	printk(KERN_ERR "sdhci_cdns_phy_init \n");
 	ret = sdhci_add_host(host);
 	if (ret)
 		goto free;
-
+	printk(KERN_ERR "sdhci_add_host \n");
 	return 0;
 free:
 	sdhci_pltfm_free(pdev);
+	printk(KERN_ERR "sdhci_pltfm_free \n");
 disable_clk:
 	clk_disable_unprepare(clk);
+	printk(KERN_ERR "clk_disable_unprepare \n");
 
 	return ret;
 }
