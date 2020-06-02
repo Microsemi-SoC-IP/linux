@@ -3,7 +3,7 @@
  * Copyright (C) 2016 Socionext Inc.
  *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
  */
-
+#define DEBUG
 #include <linux/bitfield.h>
 #include <linux/bits.h>
 #include <linux/iopoll.h>
@@ -14,6 +14,8 @@
 #include <linux/of_device.h>
 
 #include "sdhci-pltfm.h"
+
+#define DEBUG
 
 /* HRS - Host Register Set (specific to Cadence) */
 #define SDHCI_CDNS_HRS04		0x10		/* PHY access port */
@@ -380,6 +382,9 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
 	host->mmc_host_ops.hs400_enhanced_strobe =
 				sdhci_cdns_hs400_enhanced_strobe;
+
+	// Enable 3.3V
+	host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
 	sdhci_enable_v4_mode(host);
 	__sdhci_read_caps(host, &version, NULL, NULL);
 
