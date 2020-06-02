@@ -4334,11 +4334,11 @@ static int macb_probe(struct platform_device *pdev)
 			init = macb_config->init;
 		}
 	}
-
+#if false
 	err = clk_init(pdev, &pclk, &hclk, &tx_clk, &rx_clk, &tsu_clk);
 	if (err)
 		return err;
-
+#endif
 	pm_runtime_set_autosuspend_delay(&pdev->dev, MACB_PM_TIMEOUT);
 	pm_runtime_use_autosuspend(&pdev->dev);
 	pm_runtime_get_noresume(&pdev->dev);

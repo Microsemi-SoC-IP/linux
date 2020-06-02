@@ -400,8 +400,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 
 	sdhci_get_of_property(pdev);
 
-	printk(KERN_ERR "SDHCI_QUIRK2_NO_1_8_V \n");
-
 	ret = mmc_of_parse(host->mmc);
 	if (ret)
 		goto free;
