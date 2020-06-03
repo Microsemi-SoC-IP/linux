@@ -247,7 +247,7 @@ static void mmc_select_card_type(struct mmc_card *card)
 	card->ext_csd.hs200_max_dtr = hs200_max_dtr;
 	card->mmc_avail_type = avail_type;
 
-	printk(KERN_ERR "mmc_select_card_type hs_max_dtr(%d) hs200_max_dtr(%d) avail_type(%d) \n", hs_max_dtr, , );
+	printk(KERN_ERR "mmc_select_card_type hs_max_dtr(%d) hs200_max_dtr(%d) avail_type(%d) \n", hs_max_dtr, hs200_max_dtr,avail_type );
 
 
 }
