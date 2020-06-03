@@ -239,13 +239,14 @@ EXPORT_SYMBOL_GPL(sdhci_reset);
 
 static void sdhci_do_reset(struct sdhci_host *host, u8 mask)
 {
+	printk(KERN_ERR "sdhci_do_reset\n");
 	if (host->quirks & SDHCI_QUIRK_NO_CARD_NO_RESET) {
 		struct mmc_host *mmc = host->mmc;
 
 		if (!mmc->ops->get_cd(mmc))
 			return;
 	}
-
+	printk(KERN_ERR "sdhci_do_reset host->ops->reset\n");
 	host->ops->reset(host, mask);
 
 	if (mask & SDHCI_RESET_ALL) {

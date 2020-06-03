@@ -393,8 +393,8 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	host->mmc_host_ops.hs400_enhanced_strobe =
 				sdhci_cdns_hs400_enhanced_strobe;
 
-	// Enable 3.3V
-	host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+	// Enable 3.3V / disable reset
+	host->quirks |= SDHCI_QUIRK2_NO_1_8_V | SDHCI_QUIRK_NO_CARD_NO_RESET;
 	printk(KERN_ERR "SDHCI_QUIRK2_NO_1_8_V \n");
 
 	sdhci_enable_v4_mode(host);
