@@ -403,7 +403,6 @@ static int microchip_clk_pfsoc_probe(struct platform_device *pdev)
 	struct resource *res;
 	const char *parent;
 	int i;
-	is it compile
 	printk(KERN_ERR "microchip_clk_pfsoc_probe\n");
 
 	parent = of_clk_get_parent_name(dev->of_node, 0);
