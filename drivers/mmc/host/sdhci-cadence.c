@@ -354,7 +354,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	static const u16 version = SDHCI_SPEC_400 << SDHCI_SPEC_VER_SHIFT;
 
 	printk(KERN_ERR "sdhci_cdns_probe\n");
-#if false
 	clk = devm_clk_get(dev, NULL);
 	if (IS_ERR(clk))
 		return PTR_ERR(clk);
@@ -364,7 +363,7 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	ret = clk_prepare_enable(clk);
 	if (ret)
 		return ret;
-#endif
+
 	printk(KERN_ERR "clk_prepare_enable - OK\n");
 	data = of_device_get_match_data(dev);
 	if (!data)
@@ -393,8 +392,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
 	host->mmc_host_ops.hs400_enhanced_strobe =
 				sdhci_cdns_hs400_enhanced_strobe;
 
-	// Enable 3.3V / disable reset
-	host->quirks |= SDHCI_QUIRK2_NO_1_8_V | SDHCI_QUIRK_NO_CARD_NO_RESET;
 	printk(KERN_ERR "SDHCI_QUIRK2_NO_1_8_V \n");
 
 	sdhci_enable_v4_mode(host);
