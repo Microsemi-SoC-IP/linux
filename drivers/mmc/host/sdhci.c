@@ -34,7 +34,7 @@
 #include <linux/mmc/slot-gpio.h>
 
 #include "sdhci.h"
-
+#define DEBUG
 #define DRIVER_NAME "sdhci"
 
 #define DBG(f, x...) \
@@ -141,6 +141,7 @@ void sdhci_enable_v4_mode(struct sdhci_host *host)
 {
 	host->v4_mode = true;
 	sdhci_do_enable_v4_mode(host);
+	printk(KERN_ERR "sdhci_enable_v4_mode\n"); 
 }
 EXPORT_SYMBOL_GPL(sdhci_enable_v4_mode);
 
@@ -152,6 +153,8 @@ static inline bool sdhci_data_line_cmd(struct mmc_command *cmd)
 static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
 {
 	u32 present;
+
+	printk(KERN_ERR "sdhci_set_card_detection (%d)\n", enable); 
 
 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
 	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
@@ -187,6 +190,7 @@ static void sdhci_runtime_pm_bus_on(struct sdhci_host *host)
 		return;
 	host->bus_on = true;
 	pm_runtime_get_noresume(host->mmc->parent);
+	printk(KERN_ERR "sdhci_runtime_pm_bus_on\n"); 
 }
 
 static void sdhci_runtime_pm_bus_off(struct sdhci_host *host)
@@ -195,11 +199,14 @@ static void sdhci_runtime_pm_bus_off(struct sdhci_host *host)
 		return;
 	host->bus_on = false;
 	pm_runtime_put_noidle(host->mmc->parent);
+	printk(KERN_ERR "sdhci_runtime_pm_bus_off\n"); 
 }
 
 void sdhci_reset(struct sdhci_host *host, u8 mask)
 {
 	ktime_t timeout;
+
+	printk(KERN_ERR "sdhci_reset\n");
 
 	sdhci_writeb(host, mask, SDHCI_SOFTWARE_RESET);
 
@@ -259,7 +266,7 @@ static void sdhci_set_default_irqs(struct sdhci_host *host)
 		    SDHCI_INT_INDEX | SDHCI_INT_END_BIT | SDHCI_INT_CRC |
 		    SDHCI_INT_TIMEOUT | SDHCI_INT_DATA_END |
 		    SDHCI_INT_RESPONSE;
-
+printk(KERN_ERR "sdhci_set_default_irqs\n");
 	if (host->tuning_mode == SDHCI_TUNING_MODE_2 ||
 	    host->tuning_mode == SDHCI_TUNING_MODE_3)
 		host->ier |= SDHCI_INT_RETUNE;
@@ -272,6 +279,8 @@ static void sdhci_config_dma(struct sdhci_host *host)
 {
 	u8 ctrl;
 	u16 ctrl2;
+
+	printk(KERN_ERR "sdhci_config_dma\n");
 
 	if (host->version < SDHCI_SPEC_200)
 		return;
@@ -318,6 +327,8 @@ static void sdhci_init(struct sdhci_host *host, int soft)
 {
 	struct mmc_host *mmc = host->mmc;
 
+	printk(KERN_ERR "sdhci_init soft(%d)\n", soft);
+
 	if (soft)
 		sdhci_do_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
 	else
@@ -343,6 +354,7 @@ static void sdhci_reinit(struct sdhci_host *host)
 
 	sdhci_init(host, 0);
 	sdhci_enable_card_detection(host);
+	printk(KERN_ERR "sdhci_reinit \n");
 
 	/*
 	 * A change to the card detect bits indicates a change in present state,
@@ -614,6 +626,8 @@ static int sdhci_pre_dma_transfer(struct sdhci_host *host,
 				  struct mmc_data *data, int cookie)
 {
 	int sg_count;
+
+	printk(KERN_ERR "sdhci_pre_dma_transfer \n");
 
 	/*
 	 * If the data buffers are already mapped, return the previous
@@ -980,6 +994,8 @@ static void sdhci_set_transfer_irqs(struct sdhci_host *host)
 	u32 pio_irqs = SDHCI_INT_DATA_AVAIL | SDHCI_INT_SPACE_AVAIL;
 	u32 dma_irqs = SDHCI_INT_DMA_END | SDHCI_INT_ADMA_ERROR;
 
+	
+
 	if (host->flags & SDHCI_REQ_USE_DMA)
 		host->ier = (host->ier & ~pio_irqs) | dma_irqs;
 	else
@@ -1002,6 +1018,7 @@ void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
 		host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+	printk(KERN_ERR "sdhci_set_data_timeout_irq \n");
 }
 EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
 
@@ -3143,6 +3160,7 @@ static void sdhci_adma_show_error(struct sdhci_host *host)
 static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
 {
 	u32 command;
+	printk(KERN_ERR "sdhci_data_irq intmask(%d)\n", intmask); 
 
 	/* CMD19 generates _only_ Buffer Read Ready interrupt */
 	if (intmask & SDHCI_INT_DATA_AVAIL) {
@@ -3282,7 +3300,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
 	u32 intmask, mask, unexpected = 0;
 	int max_loops = 16;
 	int i;
-
+    printk(KERN_ERR "sdhci_irq irq(%d)\n", irq); 
 	spin_lock(&host->lock);
 
 	if (host->runtime_suspended) {
