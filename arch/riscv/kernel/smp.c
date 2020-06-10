@@ -52,11 +52,15 @@ int riscv_hartid_to_cpuid(int hartid)
 {
 	int i;
 
-	for (i = 0; i < NR_CPUS; i++)
-		if (cpuid_to_hartid_map(i) == hartid)
+	for (i = 0; i < NR_CPUS; i++) {
+		if (cpuid_to_hartid_map(i) == hartid) {
+			pr_info("riscv_hartid_to_cpuid [%d]-[%d]\n", hartid, i);
 			return i;
 
-	pr_err("Couldn't find cpu id for hartid [%d]\n", hartid);
+		}
+	}
+
+	pr_info("Couldn't find cpu id for hartid [%d]\n", hartid);
 	return i;
 }
 
@@ -83,6 +87,7 @@ int setup_profiling_timer(unsigned int multiplier)
 
 static void ipi_stop(void)
 {
+	pr_info("ipi_stop \n");
 	set_cpu_online(smp_processor_id(), false);
 	while (1)
 		wait_for_interrupt();
@@ -108,6 +113,7 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
 static void send_ipi_single(int cpu, enum ipi_message_type op)
 {
 	int hartid = cpuid_to_hartid_map(cpu);
+	pr_info("send_ipi_single(%d) \n",hartid);
 
 	smp_mb__before_atomic();
 	set_bit(op, &ipi_data[cpu].bits);
@@ -131,7 +137,7 @@ void riscv_software_interrupt(void)
 {
 	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
 	unsigned long *stats = ipi_data[smp_processor_id()].stats;
-
+	pr_info("riscv_software_interrupt \n");
 	clear_ipi();
 
 	while (true) {

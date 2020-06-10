@@ -62,7 +62,7 @@ static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
 	int rc;
 	unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
 	int hartid = cpuid_to_hartid_map(cpuid);
-
+	pr_info("RISCV sbi_cpu_start \n", cpuid);
 	cpu_update_secondary_bootdata(cpuid, tidle);
 	rc = sbi_hsm_hart_start(hartid, boot_addr, 0);
 
@@ -71,6 +71,7 @@ static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
 
 static int sbi_cpu_prepare(unsigned int cpuid)
 {
+	pr_info("RISCV sbi_cpu_prepare \n", cpuid);
 	if (!cpu_ops_sbi.cpu_start) {
 		pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
 		return -ENODEV;
