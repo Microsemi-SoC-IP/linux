@@ -48,6 +48,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 	int ret;
 
 	/* This covers non-smp usecase mandated by "nosmp" option */
+	pr_info("RISCV smp_prepare_cpus (%d)\n", max_cpus);
 	if (max_cpus == 0)
 		return;
 
