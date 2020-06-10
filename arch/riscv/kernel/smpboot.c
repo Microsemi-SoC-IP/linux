@@ -111,6 +111,7 @@ int start_secondary_cpu(int cpu, struct task_struct *tidle)
 	if (cpu_ops[cpu]->cpu_start)
 		return cpu_ops[cpu]->cpu_start(cpu, tidle);
 
+	pr_info("start_secondary_cpu EOPNOTSUPP\n");
 	return -EOPNOTSUPP;
 }
 
@@ -118,7 +119,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 {
 	int ret = 0;
 	tidle->thread_info.cpu = cpu;
-
+	pr_info("call start_secondary_cpu(%d)\n", cpu);
 	ret = start_secondary_cpu(cpu, tidle);
 	if (!ret) {
 		lockdep_assert_held(&cpu_running);

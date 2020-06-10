@@ -5,7 +5,11 @@
  *
  * Copyright (C) 2012 ARM Ltd.
  * Copyright (C) 2015 Regents of the University of California
- * Copyright (C) 2017 SiFive
+ * Copyright
+ * 
+ * 
+ * 
+ *  (C) 2017 SiFive
  */
 
 #include <linux/cpu.h>

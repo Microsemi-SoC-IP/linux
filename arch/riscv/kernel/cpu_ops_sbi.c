@@ -19,10 +19,14 @@ static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
 {
 	struct sbiret ret;
 
+	pr_info("sbi_hsm_hart_start ghartid(%d) \n", hartid);
+
 	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
 			hartid, saddr, priv, 0, 0, 0);
-	if (ret.error)
+	if (ret.error) {
 		return sbi_err_map_linux_errno(ret.error);
+		pr_info("sbi_hsm_hart_start sbi_ecall(ERROR) \n");
+	}
 	else
 		return 0;
 }
