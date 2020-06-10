@@ -56,12 +56,16 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 		if (cpuid == smp_processor_id())
 			continue;
 		if (cpu_ops[cpuid]->cpu_prepare) {
+			pr_info("RISCV sbi cpu_prepare..(cpuid) (%d)\n", cpuid);
 			ret = cpu_ops[cpuid]->cpu_prepare(cpuid);
 			if (ret)
 				continue;
 		}
+		pr_info("set_cpu_present ..smp_prepare_cpus (cpuid) (%d)\n", cpuid);
 		set_cpu_present(cpuid, true);
 	}
+
+	pr_info("Finished ..smp_prepare_cpus (cpuid) (%d)\n", cpuid);
 }
 
 void __init setup_smp(void)
