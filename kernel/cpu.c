@@ -1318,10 +1318,16 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 
 	for_each_present_cpu(cpu) {
 		pr_info("bringup CPU ...(%d)", cpu);
-		if (num_online_cpus() >= setup_max_cpus)
+		if (num_online_cpus() >= setup_max_cpus) {
+			pr_info("num_online_cpus >= setup_max_cpus(%d)", setup_max_cpus);
 			break;
-		if (!cpu_online(cpu))
+		}
+		if (!cpu_online(cpu)) {
+			pr_info("CPU !online(%d)", cpu);
 			cpu_up(cpu, CPUHP_ONLINE);
+		} else {
+			pr_info("CPU online(%d)", cpu);
+		}
 	}
 }
 

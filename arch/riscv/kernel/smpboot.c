@@ -126,7 +126,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 					    msecs_to_jiffies(1000));
 
 		if (!cpu_online(cpu)) {
-			pr_crit("CPU%u: failed to come online\n", cpu);
+			pr_crit("CPU%u: riscv failed to come online\n", cpu);
 			ret = -EIO;
 		}
 	} else {
