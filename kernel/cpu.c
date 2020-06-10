@@ -1317,6 +1317,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 	unsigned int cpu;
 
 	for_each_present_cpu(cpu) {
+		pr_info("bringup CPU ...(%d)", cpu);
 		if (num_online_cpus() >= setup_max_cpus)
 			break;
 		if (!cpu_online(cpu))

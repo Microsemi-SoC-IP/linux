@@ -601,7 +601,7 @@ void __init smp_init(void)
 	idle_threads_init();
 	cpuhp_threads_init();
 
-	pr_info("Bringing up secondary CPUs ...\n");
+	pr_info("Bringing up secondary CPUs ... MAX CPU'S(%d)\n", setup_max_cpus);
 
 	bringup_nonboot_cpus(setup_max_cpus);
 
