@@ -60,9 +60,11 @@ static int sbi_hsm_hart_get_status(unsigned long hartid)
 static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
 {
 	int rc;
+	pr_info("RISCV sbi_cpu_start step 1\n");
 	unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
+	pr_info("RISCV sbi_cpu_start boot_addr(%x)\n", boot_addr);
 	int hartid = cpuid_to_hartid_map(cpuid);
-	pr_info("RISCV sbi_cpu_start \n", cpuid);
+	pr_info("RISCV sbi_cpu_start hardid (%d)\n", hartid);
 	cpu_update_secondary_bootdata(cpuid, tidle);
 	rc = sbi_hsm_hart_start(hartid, boot_addr, 0);
 

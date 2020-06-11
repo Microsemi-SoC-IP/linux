@@ -25,7 +25,7 @@ void cpu_update_secondary_bootdata(unsigned int cpuid,
 				   struct task_struct *tidle)
 {
 	int hartid = cpuid_to_hartid_map(cpuid);
-
+	pr_info("RISCV cpu_update_secondary_bootdata\n");
 	/* Make sure tidle is updated */
 	smp_mb();
 	WRITE_ONCE(__cpu_up_stack_pointer[hartid],

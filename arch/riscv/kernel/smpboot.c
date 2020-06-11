@@ -114,8 +114,11 @@ void __init setup_smp(void)
 int start_secondary_cpu(int cpu, struct task_struct *tidle)
 {
 	pr_info("call start_secondary_cpu(%d) enter cpu_start\n", cpu);
-	if (cpu_ops[cpu]->cpu_start)
+	if (cpu_ops[cpu]->cpu_start) {
+		pr_info("Jump to address for cpu_start(%x) \n", &cpu_start);
 		return cpu_ops[cpu]->cpu_start(cpu, tidle);
+	
+	}
 
 	pr_info("start_secondary_cpu EOPNOTSUPP\n");
 	return -EOPNOTSUPP;
@@ -125,8 +128,9 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 {
 	int ret = 0;
 	tidle->thread_info.cpu = cpu;
-	pr_info("call start_secondary_cpu(%d)\n", cpu);
+	pr_info("__cpu_up call start_secondary_cpu(%d)\n", cpu);
 	ret = start_secondary_cpu(cpu, tidle);
+	pr_info("__cpu_up return start_secondary_cpu(%d)\n", ret);
 	if (!ret) {
 		lockdep_assert_held(&cpu_running);
 		wait_for_completion_timeout(&cpu_running,

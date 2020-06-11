@@ -14,6 +14,7 @@ const struct cpu_operations cpu_ops_spinwait;
 
 static int spinwait_cpu_prepare(unsigned int cpuid)
 {
+	pr_info("RISCV spinwait_cpu_prepare [%d]\n", cpuid);
 	if (!cpu_ops_spinwait.cpu_start) {
 		pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
 		return -ENODEV;
@@ -31,6 +32,7 @@ static int spinwait_cpu_start(unsigned int cpuid, struct task_struct *tidle)
 	 * (i.e __cpu_up_stack_pointer) signals to the spinning cpus that they
 	 * can continue the boot process.
 	 */
+	pr_info("RISCV spinwait_cpu_start (%d)\n", cpuid);
 	cpu_update_secondary_bootdata(cpuid, tidle);
 
 	return 0;
