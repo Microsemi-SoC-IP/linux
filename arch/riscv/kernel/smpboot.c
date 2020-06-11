@@ -115,7 +115,7 @@ int start_secondary_cpu(int cpu, struct task_struct *tidle)
 {
 	pr_info("call start_secondary_cpu(%d) enter cpu_start\n", cpu);
 	if (cpu_ops[cpu]->cpu_start) {
-		pr_info("Jump to address for cpu_start(%x) \n", &cpu_start);
+		pr_info("Jump to address for cpu_start(%x) \n", cpu_ops[cpu]->cpu_start);
 		return cpu_ops[cpu]->cpu_start(cpu, tidle);
 	
 	}

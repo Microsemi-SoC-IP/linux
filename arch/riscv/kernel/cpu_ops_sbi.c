@@ -62,7 +62,7 @@ static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
 	int rc;
 	pr_info("RISCV sbi_cpu_start step 1\n");
 	unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
-	pr_info("RISCV sbi_cpu_start boot_addr(%x)\n", boot_addr);
+	pr_info("RISCV sbi_cpu_start boot_addr(%u)\n", boot_addr);
 	int hartid = cpuid_to_hartid_map(cpuid);
 	pr_info("RISCV sbi_cpu_start hardid (%d)\n", hartid);
 	cpu_update_secondary_bootdata(cpuid, tidle);
